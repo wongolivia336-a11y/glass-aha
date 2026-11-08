@@ -8,20 +8,23 @@
   <title>GLASS AHA — The art of almost seeing</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./liquid-ui.css" />
   <script type="module" src="./src/main.js"></script>
+  <script type="module" src="./src/liquid-ui.js"></script>
 </head>
 <body>
+<canvas class="ambient-backdrop" id="ambientBackdrop" aria-hidden="true"></canvas>
 <div class="site" id="site">
   <header class="site-header">
     <a class="brand" href="#top" aria-label="GLASS AHA, 返回顶部"><span class="brand-symbol" aria-hidden="true">✳</span><span>GLASS <i>AHA</i><b>.</b></span></a>
-    <span class="header-caption">AN EXPERIMENT IN SOFT FOCUS <span aria-hidden="true">/</span> 2026</span>
-    <button type="button" class="header-link" id="aboutOpen" aria-haspopup="dialog">关于作品 <span aria-hidden="true">↗</span></button>
+    <span class="header-caption"><span class="signal-dot" aria-hidden="true"></span> AN EXPERIMENT IN SOFT FOCUS <span aria-hidden="true">/</span> 2026</span>
+    <button type="button" class="header-link liquid-surface" data-optics="small" id="aboutOpen" aria-haspopup="dialog"><span class="about-icon" aria-hidden="true">↗</span><span>ABOUT / 关于</span></button>
   </header>
 
   <main id="top">
     <section class="intro-strip" aria-labelledby="workTitle">
       <div class="title-cluster"><span class="eyebrow"><span class="eyebrow-dot"></span> MATERIAL STUDY / 002</span><h1 id="workTitle">有些风景，<em>适合隔着雾看。</em></h1></div>
-      <div class="intro-aside"><span>THE ART OF ALMOST SEEING</span><p>Touch to find a little clarity.</p></div>
+      <div class="intro-aside"><span class="aside-asterisk" aria-hidden="true">✳</span><span>THE ART OF ALMOST SEEING</span><p>Clarity is only one way of seeing.</p></div>
     </section>
 
     <section class="experience" aria-label="可触摸的玻璃实验">
@@ -38,32 +41,35 @@
         <div class="whisper" id="whisper" aria-live="polite"></div>
       </div>
 
-      <div class="tool-dock" role="group" aria-label="玻璃交互控制台">
-        <div class="tool-intro"><span class="tool-icon" aria-hidden="true">✳</span><div><strong>FOG LAB</strong><small>触摸这扇窗</small></div></div>
-        <div class="tool-mode" role="group" aria-label="选择笔触行为">
-          <button type="button" class="mode-button is-active" id="clearMode" aria-pressed="true"><span aria-hidden="true">◌</span> 擦开</button>
-          <button type="button" class="mode-button" id="fogMode" aria-pressed="false"><span aria-hidden="true">✳</span> 凝雾</button>
+      <div class="tool-dock liquid-surface" data-optics="dock" role="group" aria-label="玻璃交互控制台">
+        <div class="tool-intro">
+          <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="13.3" stroke="currentColor" stroke-width=".9" stroke-dasharray="1.2 3.1"/><path d="M18 7v22M7 18h22M10.2 10.2l15.6 15.6M25.8 10.2 10.2 25.8" stroke="currentColor" stroke-width=".8"/></svg></span>
+          <div><strong>FOG <span>LAB.</span></strong><small>01 — SURFACE CONTROL</small></div>
         </div>
-        <div class="tool-divider"></div>
-        <label class="tool-range" for="radiusRange"><span class="range-top"><span>笔触</span><output id="radiusValue" for="radiusRange">84</output></span><input type="range" id="radiusRange" min="22" max="180" step="2" value="84" aria-label="笔触半径，像素" /></label>
-        <label class="tool-range" for="strengthRange"><span class="range-top"><span>力度</span><output id="strengthValue" for="strengthRange">72%</output></span><input type="range" id="strengthRange" min="20" max="100" step="2" value="72" aria-label="笔触力度" /></label>
-        <label class="tool-range" for="recoveryRange"><span class="range-top"><span>回雾</span><output id="recoveryValue" for="recoveryRange">9s</output></span><input type="range" id="recoveryRange" min="3" max="22" step="1" value="9" aria-label="雾气恢复速度，秒" /></label>
-        <label class="tool-range" for="diffusionRange"><span class="range-top"><span>弥散</span><output id="diffusionValue" for="diffusionRange">78%</output></span><input type="range" id="diffusionRange" min="0" max="100" step="2" value="78" aria-label="玻璃弥散程度" /></label>
-        <div class="tool-divider tool-divider-actions"></div>
-        <div class="tool-actions"><button type="button" id="resetButton" class="action-icon" aria-label="重新起雾" title="重新起雾 (Esc)"><span aria-hidden="true">↺</span></button><button type="button" id="revealButton" class="action-reveal" aria-pressed="false"><span aria-hidden="true">◉</span><span id="revealLabel">完整观看</span></button></div>
+        <div class="tool-mode" role="group" aria-label="选择笔触行为">
+          <button type="button" class="mode-button is-active" id="clearMode" aria-pressed="true"><span class="mode-symbol" aria-hidden="true">◌</span><span>擦开</span></button>
+          <button type="button" class="mode-button" id="fogMode" aria-pressed="false"><span class="mode-symbol" aria-hidden="true">✳</span><span>凝雾</span></button>
+        </div>
+        <div class="tool-ranges">
+          <label class="tool-range" for="radiusRange"><span class="range-top"><span>笔触 <small>SIZE</small></span><output id="radiusValue" for="radiusRange">84</output></span><input type="range" id="radiusRange" min="22" max="180" step="2" value="84" aria-label="笔触半径，像素" /><span class="range-hint" aria-hidden="true">px</span></label>
+          <label class="tool-range" for="strengthRange"><span class="range-top"><span>力度 <small>PRESSURE</small></span><output id="strengthValue" for="strengthRange">72%</output></span><input type="range" id="strengthRange" min="20" max="100" step="2" value="72" aria-label="笔触力度" /></label>
+          <label class="tool-range" for="recoveryRange"><span class="range-top"><span>回雾 <small>DECAY</small></span><output id="recoveryValue" for="recoveryRange">9s</output></span><input type="range" id="recoveryRange" min="3" max="22" step="1" value="9" aria-label="雾气恢复速度，秒" /></label>
+          <label class="tool-range" for="diffusionRange"><span class="range-top"><span>弥散 <small>DIFFUSION</small></span><output id="diffusionValue" for="diffusionRange">78%</output></span><input type="range" id="diffusionRange" min="0" max="100" step="2" value="78" aria-label="玻璃弥散程度" /></label>
+        </div>
+        <div class="tool-actions"><button type="button" id="resetButton" class="action-icon" aria-label="重新起雾" title="重新起雾 (Esc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a8 8 0 1 1 2.3 5.6"/><path d="M4 4v7h7"/></svg></button><button type="button" id="revealButton" class="action-reveal" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12s3.4-5.6 9.5-5.6 9.5 5.6 9.5 5.6-3.4 5.6-9.5 5.6S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.9"/></svg><span id="revealLabel">完整观看</span></button></div>
       </div>
 
-      <div class="gesture-line"><span id="sceneCaption">在雨停之前，玻璃比窗外的植物更早感受到天气。</span><button class="gesture-help" id="helpTrigger" type="button" aria-expanded="false" aria-controls="gestureTips"><span aria-hidden="true">⌁</span> 手势指南 <span aria-hidden="true">↗</span></button></div>
+      <div class="gesture-line"><span id="sceneCaption">在雨停之前，玻璃比窗外的植物更早感受到天气。</span><button class="gesture-help liquid-surface" data-optics="small" id="helpTrigger" type="button" aria-expanded="false" aria-controls="gestureTips"><span aria-hidden="true">⌁</span> 手势指南 <span aria-hidden="true">↗</span></button></div>
       <div class="gesture-tips" id="gestureTips" hidden><span><b>01</b> 拖动 / 擦开雾气</span><span><b>02</b> 长按 / 水汽慢慢晕开</span><span><b>03</b> 双指捏合 / 改变笔触</span><span><b>04</b> 双击 / 留下一圈涟漪</span><span><b>+</b> Shift + 拖动 / 临时凝雾</span></div>
     </section>
 
     <nav class="chapters" aria-label="选择一扇窗">
-      <button type="button" class="chapter active" data-chapter="0" aria-pressed="true"><span class="chapter-index">01</span><span class="chapter-name">等雨停 <small>AFTER THE RAIN</small></span><span class="chapter-arrow" aria-hidden="true">↗</span></button>
-      <button type="button" class="chapter" data-chapter="1" aria-pressed="false"><span class="chapter-index">02</span><span class="chapter-name">没寄出的信 <small>THE UNSENT LETTER</small></span><span class="chapter-arrow" aria-hidden="true">↗</span></button>
-      <button type="button" class="chapter" data-chapter="2" aria-pressed="false"><span class="chapter-index">03</span><span class="chapter-name">末班车的窗 <small>THE LAST TRAIN</small></span><span class="chapter-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="chapter active liquid-surface" data-optics="chapter" data-chapter="0" aria-pressed="true"><span class="chapter-index">01 <i></i></span><span class="chapter-name">等雨停 <small>AFTER THE RAIN</small></span><span class="chapter-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="chapter liquid-surface" data-optics="chapter" data-chapter="1" aria-pressed="false"><span class="chapter-index">02 <i></i></span><span class="chapter-name">没寄出的信 <small>THE UNSENT LETTER</small></span><span class="chapter-arrow" aria-hidden="true">↗</span></button>
+      <button type="button" class="chapter liquid-surface" data-optics="chapter" data-chapter="2" aria-pressed="false"><span class="chapter-index">03 <i></i></span><span class="chapter-name">末班车的窗 <small>THE LAST TRAIN</small></span><span class="chapter-arrow" aria-hidden="true">↗</span></button>
     </nav>
   </main>
-  <footer class="site-footer"><span>GLASS AHA © 2026</span><span>NOT EVERYTHING NEEDS TO BE REVEALED.</span><a href="https://github.com/wongolivia336-a11y/glass-aha" target="_blank" rel="noopener noreferrer">SOURCE ↗</a></footer>
+  <footer class="site-footer"><span>GLASS AHA © 2026</span><span>THE ART OF ALMOST SEEING.</span><a href="https://github.com/wongolivia336-a11y/glass-aha" target="_blank" rel="noopener noreferrer">SOURCE ↗</a></footer>
 </div>
 <dialog class="about-dialog" id="aboutDialog" aria-labelledby="aboutTitle"><div class="dialog-header"><span>FIELD NOTE / 002</span><button type="button" id="aboutClose" aria-label="关闭">×</button></div><h2 id="aboutTitle">不必总是看清。</h2><p>有些模糊来自天气，有些来自不愿寄出的心事，还有些来自来不及留住的瞬间。</p><p>这里的擦拭不承诺永久揭示。雾会回来；你也可以选择让它留下。</p><p class="about-credit">An original WebGL material study inspired by <a href="https://github.com/Johnlzx/glass-garden" target="_blank" rel="noopener noreferrer">glass-garden ↗</a>. No source images or code were copied.</p><button type="button" class="dialog-back" id="aboutBack">回到窗前 ↗</button></dialog>
 <div class="sr-only" role="status" aria-live="polite" id="announcer"></div>

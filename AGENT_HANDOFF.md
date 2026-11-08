@@ -32,3 +32,16 @@ The site is an independent small creative-coding work about **partial visibility
 ## Agent prompt
 
 > Act as an uncompromising interaction designer, shader engineer, and frontend QA lead. Open the GLASS AHA V2 source and inspect the live actual output in desktop and mobile browsers, not just the JSX/HTML. Protect the central idea: opacity is a relationship, not a filter, and revealing everything is never a win condition. Further refine the existing blue light scattering, edge normals, condensation motion, and high-fidelity multi-touch. Test both WebGL2 and Canvas2D fallback, fix gestures and accessibility issues, compare before/after screenshots, and only commit improvements verified in a browser. Do not clutter the experience with explanatory copy, neon glassmorphism, random animations, or AI slogans. Preserve the three scenes and the existing functional controls.
+
+---
+
+## V3 peripheral UI implementation (2026-11-08)
+
+The central `src/main.js` glass engine is deliberately unchanged from V2. The updated `index.html` adds `#ambientBackdrop`, `liquid-ui.css`, and `src/liquid-ui.js`. `src/liquid-ui.js` owns a shared 2D backdrop painted in scene-dependent blue palettes, and mounts per-surface WebGL2 canvases on selected DOM targets (`[data-optics]`). Each uses the same GLSL shader design for rounded SDF clip, interior refraction, wave and asymmetric edge glint. Text, focus and click events always stay in DOM. Scene buttons notify the ambient source to repaint and resample. Resize, scroll and visibility update optics. CSS fallback remains functional when WebGL2 is blocked.
+
+### Next QA iteration
+
+- Visual test on GPU-enabled Chrome and Safari, especially alpha compositing, DPR, rounded clipping, sampling alignment on scroll, and repeated scene changes.
+- Performance-profile the per-surface WebGL contexts on midrange Android. Migrate to a single compositor if needed; do not silently reduce interaction fidelity.
+- Check 320/390/768/1440 px and reduced-transparency / reduced-motion states, keyboard focus and native `dialog`.
+- Keep the editorial blue feeling restrained. The optics UI should be secondary to the central interactive glass.

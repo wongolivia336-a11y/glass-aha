@@ -1,50 +1,30 @@
-# GLASS AHA — The Art of Almost Seeing
+# GLASS AHA — The Art of Almost Seeing / V3
 
-A quiet, blue-toned interactive glass experiment. Three windows; three reasons to keep part of a view out of focus. Version 2 is designed for touch, not for reading long explanations.
+一个冷蓝色、可触摸的模糊实验。玻璃舞台负责被观看，外围交互控件负责让观看本身变得可玩。三幕：等雨停 / 没寄出的信 / 末班车的窗。
 
-**Concept:** Clarity is a choice, not a victory condition.
+## Interactions
 
-## Explore
+- 擦开 / 凝雾，支持鼠标拖动、单指移动、长按笔触扩散、双击涟漪、双指捏合笔触缩放；笔触、力度、回雾与弥散可调。
+- `←` / `→` 切换章节；`B` 切换笔触；`+` / `−` 调整大小；`R` 完整观看；`Esc` 重新起雾。
+- 外围 UI：液态控制坞、控件状态回弹、滑杆反馈、章节卡片、手势帮助与 About 浮层；移动端自动重排。
 
-| Gesture | Result |
-| --- | --- |
-| Drag / one-finger swipe | Temporarily clears an area of glass |
-| Hold still | The mark slowly blooms |
-| Pinch with two fingers | Resize the brush radius |
-| Double-tap / double-click | Paint a soft circular ripple |
-| Choose **凝雾** | Paint condensation instead of removing it |
-| Reveal all, then use **凝雾** | Reintroduce localized fog over a clear image |
-| Shift + drag | Temporarily paint condensation |
-| Alt/Shift + scroll on the glass | Resize brush without hijacking ordinary page scroll |
+## Architecture
 
-The control dock exposes **brush radius 22–180 px**, **pressure 20–100%**, **recovery time 3–22 s**, and **diffusion 0–100%**. Pen pressure is supported where pointer hardware provides it. `←/→` switch scenes, `B` switches brush, `+/-` changes radius, `R` reveals, and `Escape` resets. Essential content remains visible; a manual reveal option means the experience never requires precision gestures.
+- `src/main.js` — **保留原 V2 玻璃交互引擎**，独立 WebGL2 Shader + Canvas2D 降级。
+- `src/liquid-ui.js` — **V3 新增 UI optics**：一张共享全屏蓝色背景 Canvas → 按 DOM `getBoundingClientRect()` 对每个重点控件截取局部纹理 → 共用 GLSL 光学算法，计算圆角遮罩、全表面折射、缓慢扰动、非对称边缘高光 → 在各控件独立 Canvas 中合成，DOM 仍负责文本、焦点和点击。
+- `liquid-ui.css` — **V3 新增 UI 外形、反馈和响应式设计**；`style.css` 保留 V2 基础。
+- `index.html` — 重新构建外围信息架构，显著增加了玻璃舞台的视觉权重。
 
-## Scenes
+## Run
 
-- **等雨停 / After the Rain** — moisture on a greenhouse window.
-- **没寄出的信 / The Unsent Letter** — a private note behind frosted glass.
-- **末班车的窗 / The Last Train** — rainy city light behind a moving window.
+本项目无 npm 依赖。在项目根目录执行 `python3 -m http.server 5173`，然后浏览 `http://localhost:5173`。可直接部署为 GitHub Pages / Vercel 静态站。
 
-All three illustrations are procedurally rendered with Canvas2D. No personal data or touch traces are saved.
+`?no-optics` 可关闭外围光学层。浏览器不支持 WebGL2 或开启系统降低透明度时，控件会回退为仍然可读、可点击的轻量玻璃样式；`prefers-reduced-motion` 限制动画刷新。Shader 属于设计性光学模拟，不是物理精确的路径追踪。
 
-## Run / deploy
+## QA status
 
-This is a zero-dependency static site, using WebGL2 + GLSL and a Canvas2D fallback. No npm installation is required.
+已通过桌面及 390px 手机断点的 DOM 布局检查和交互事件测试；目标页面没有脚本异常。测试沙盒禁止实际 GPU 上下文，因此 **WebGL2 UI Shader 尚未完成真实设备上的渲染/性能验收**；不要将降级截图当作 WebGL2 最终效果。建议在桌面 Chrome/Safari 与 iOS/Android 上验收 GPU 内存、帧率、上下文恢复、透明度偏好和多个控件的边缘采样。
 
-```bash
-python3 -m http.server 5173
-```
+## Credit
 
-Open `http://localhost:5173` or publish the repository root with GitHub Pages, Vercel, or Netlify. The HTML uses relative paths for static hosting. Fallback rendering and pointer interactions also work without WebGL2. The layout supports desktop and mobile, reduced-motion preferences, and screen reader status announcements.
-
-## Files
-
-- `index.html` — compact experience layout and controls
-- `style.css` — diffuse blue editorial design, responsive / reduced-motion treatment
-- `src/main.js` — three original procedural scenes, normal maps, GLSL refraction, dual-channel brush mask, gestures, fallback renderer
-- `DESIGN_RATIONALE.md` — ideas behind the three reasons to blur
-- `AGENT_HANDOFF.md` — implementation / QA continuation notes
-
-## Credits
-
-Independent study inspired by [Johnlzx/glass-garden](https://github.com/Johnlzx/glass-garden)'s experimentation with glass normals, light and refraction. No upstream code or images were copied. The result is a design-oriented real-time renderer, not a physically exact optical simulation. Optional Google Fonts have system fallbacks.
+灵感来自 [Johnlzx/glass-garden](https://github.com/Johnlzx/glass-garden) 的玻璃材质研究；不包含其原始图片或代码。外围光学设计依据用户提供的《液态玻璃_技术方案_v3_whereyanlands.pdf》的架构原则独立实现。
