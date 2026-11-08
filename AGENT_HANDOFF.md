@@ -1,48 +1,34 @@
-# GLASS AHA / Agent Handoff
+# GLASS AHA V2 · Agent Handoff
 
-## Your role
-Act as an independent Creative Technologist, Shader Engineer, Interaction Designer, and demanding QA reviewer. This is not a standard frosted-glass component. It is a small interactive essay about the ethics and pleasure of partial visibility.
+## Task context
 
-## Product brief
-**Core statement:** Clarity is not the victory condition. Blurring is a designable relationship between the viewer and the viewed. This project should make that relationship tactile without becoming mystical, text-heavy, or visually noisy.
+The site is an independent small creative-coding work about **partial visibility**, using an original renderer influenced by the visual exploration of [glass-garden](https://github.com/Johnlzx/glass-garden). The owner's requested V2 direction: **much larger glass, fewer explanatory words, cool blue / pearlescent diffuse light, precise brushes, tactile multi-touch**. These changes are now implemented in the repository.
 
-**Three scenes:**
-1. After the Rain — condensation comes from weather; wiping reveals botanical details.
-2. The Unsent Letter — an unaddressed letter; revealing is a temporary choice, not an entitlement.
-3. The Last Train — moving cities and the impossibility of seeing inside/outside at once.
+## What is implemented
 
-**Interaction contract:** pointer down / touch then drag to clear; slowly regains fog after 6–9 seconds. Different chapters have different glass responses. Reveal All is a user-controlled accessibility path. R toggles reveal; ←/→ change windows; Escape restores fog. No user input is stored.
+- Full-width immersive glass stage; blue editorial design; slim title / scene picker / action bar.
+- Original Canvas2D-generated greenhouse, letter and train-window scenes.
+- WebGL2 fragment shader with a micro-normal texture, time-varying reflections, blurred refraction and adjustable optical diffusion.
+- 512 × 512 dual-channel transient mask: red for local clearing, green for local fog. Brush radius, intensity and lifetime adjustable.
+- Drag, long-press blooming, double-click / double-tap ripple, 2-finger pinch to resize, pen pressure, Shift+drag temporary fogging, Alt/Shift+wheel to resize.
+- Both erasing fog and painting condensation over a manually revealed scene; no permanent traces saved.
+- Canvas2D fallback for no WebGL2; reduced motion, pointer / keyboard affordances, semantic buttons, live announcements.
 
-## Repository and code
-- Destination: https://github.com/wongolivia336-a11y/glass-aha
-- `index.html`: semantic layout, copy, controls and modal
-- `style.css`: editorial layout, responsive design, microinteractions, reduced-motion behavior
-- `src/main.js`: procedurally illustrated scenes, native WebGL2 shader, generated normal texture, pointer-trace mask, controls, Canvas2D fallback
-- `README.md`: technical and conceptual guide
-- `favicon.svg`: authored icon
-- No build tool/dependencies needed; serve with `python3 -m http.server 5173` from root.
-- Acknowledgment: original study is independent, inspired by the upstream `Johnlzx/glass-garden` project. Do not copy third-party assets/code without a verified license.
+## Working tree and architecture
 
-## Immediate QA priorities
-1. Verify in a real desktop browser (Chromium, Firefox, Safari), plus mobile touch. Test WebGL2 success and forced fallback in a no-WebGL context.
-2. Inspect the actual rendered visuals at ~1440x900, 768x1024, 390x844, 320x700. Fix clipped copy, overprints, overlay/cursor relations, horizontal overflow, touch affordance.
-3. Drag across edges, tap rapidly, switch chapter mid-drag, re-fog mid-animation, reveal/re-hide, open/close dialog using keyboard, switch away/back to tab, test loss/restore of WebGL context.
-4. Profile GPU cost on integrated laptop and a midrange mobile phone. Limit shader samples and DPR if necessary; avoid heat/battery drain.
-5. Validate pointer UV / canvas texture orientation: brushing top left must reveal top left. Verify in the WebGL path and Canvas2D fallback.
-6. Check brush fading when crossing paths (no discontinuities), scene transition after rapid clicks, keyboard focus indicators and screen-reader announcements.
+- `index.html`: controls, scene buttons, dialog; no build step.
+- `style.css`: all tokens, blue UI, responsive transitions, motion fallback.
+- `src/main.js`: scene generators -> shader -> WebGL2 setup -> 2D fallback -> mark texture -> input orchestration.
+- Deploy as a static website from repo root. Never silently replace this with a screenshot masquerading as glass.
 
-## Next creative iteration (not compulsory; use taste)
-- Make fog feel physically specific: a little condensation beading after a held contact, more precise microscopic normals and rim lighting; avoid generic glowing gradients.
-- Strengthen the narrative rewards: each scene should contain one small discoverable detail, not a hidden motivational slogan.
-- Consider audio only with explicit opt-in, grounded in each physical scene.
-- Add a thoughtful loading/fallback state for extremely slow devices.
-- Refine drawing quality with hand-authored assets only if clearly better than algorithmic illustration. Keep editorial white space and avoid AI-generated-looking iconography.
+## Next QA / iteration priorities
 
-## Guardrails
-No permanent clear state as a hidden "win"; do not put essential information behind blur. Avoid oversized inspirational claims, fake glassmorphism dashboard UI, neon gradients, or gratuitous motion. Treat motion reduction and manual reveal as non-negotiable. Make each state meaningful, accessible, and beautiful.
+1. Run in a real GPU-enabled browser. Confirm shader program links, normal texture directions and that red clear brush / green fog brush draw at the same coordinates as the cursor; screenshots in this handoff were taken on the Canvas2D fallback because the remote headless test environment did not expose WebGL2.
+2. Test real iOS Safari and Android Chrome multi-touch: pinch scale, finger release during pinch, long press, two quick taps, scrolling only outside the glass. Ensure no pointer capture exceptions.
+3. Compare scene compositional quality with typography at 320, 390, 768, 1280 and 1440 px; eliminate any awkward Chinese glyphs or HUD overlaps.
+4. Profile masks, GPU samples, and fallback's repeated canvas blurs on low-end devices. Consider caching the fallback base scene and lowering DPR adaptively while preserving responsive clarity.
+5. Improve physically grounded condensation: beading, varied evaporation rates, realistic edge meniscus. Keep the UI quiet. Small meaningful interactions over decorative complexity.
 
-## Acceptance criteria
-The site loads without package installation. All three windows present visibly different scenes and material characteristics. A pointer or finger clears and re-fogs a local region. The clear-image button works without interaction. Responsive at 320–1440+ px. Zero unhandled JS errors in standard browsers. Source and deploy instructions remain in the GitHub repo.
+## Agent prompt
 
-## One-paragraph execution prompt
-> Audit and polish GLASS AHA as a serious creative-coding portfolio piece, not a demo filter. Inspect the full repository and live rendered UI, preserve its three intentional reasons for blur and the principle that clarity is not the goal, and raise optical fidelity, illustrated scene quality, pointer/touch feedback, keyboard accessibility, responsiveness, and performance to a professional standard. Do not merely add effects or rewrite the poetic copy. Evaluate each detail as a physically and conceptually motivated choice. Verify desktop and mobile interactions with browser screenshots and tests, repair failures, then commit the finished source to the repository with a concise evidence-based report.
+> Act as an uncompromising interaction designer, shader engineer, and frontend QA lead. Open the GLASS AHA V2 source and inspect the live actual output in desktop and mobile browsers, not just the JSX/HTML. Protect the central idea: opacity is a relationship, not a filter, and revealing everything is never a win condition. Further refine the existing blue light scattering, edge normals, condensation motion, and high-fidelity multi-touch. Test both WebGL2 and Canvas2D fallback, fix gestures and accessibility issues, compare before/after screenshots, and only commit improvements verified in a browser. Do not clutter the experience with explanatory copy, neon glassmorphism, random animations, or AI slogans. Preserve the three scenes and the existing functional controls.

@@ -1,44 +1,50 @@
-# GLASS AHA — 雾后的几件小事
+# GLASS AHA — The Art of Almost Seeing
 
-**An experiment in partial visibility.** 一件关于模糊、靠近、保留与暂时看清的交互作品。
+A quiet, blue-toned interactive glass experiment. Three windows; three reasons to keep part of a view out of focus. Version 2 is designed for touch, not for reading long explanations.
 
-> 清晰不是通关状态；模糊也不是等待被修复的错误。
+**Concept:** Clarity is a choice, not a victory condition.
 
-## 体验
+## Explore
 
-一扇会短暂记住触碰的玻璃，三个必须隔着雾气观看的场景：
+| Gesture | Result |
+| --- | --- |
+| Drag / one-finger swipe | Temporarily clears an area of glass |
+| Hold still | The mark slowly blooms |
+| Pinch with two fingers | Resize the brush radius |
+| Double-tap / double-click | Paint a soft circular ripple |
+| Choose **凝雾** | Paint condensation instead of removing it |
+| Reveal all, then use **凝雾** | Reintroduce localized fog over a clear image |
+| Shift + drag | Temporarily paint condensation |
+| Alt/Shift + scroll on the glass | Resize brush without hijacking ordinary page scroll |
 
-1. **等雨停 / After the Rain** — 温室的水汽是天气留下的距离。擦开一小块，看到花和光。
-2. **没寄出的信 / The Unsent Letter** — 遮蔽也可能是保留的权利。信纸并不要求被全部揭露。
-3. **末班车的窗 / The Last Train** — 移动的光、折射的街道；窗内和窗外无法同时清晰。
+The control dock exposes **brush radius 22–180 px**, **pressure 20–100%**, **recovery time 3–22 s**, and **diffusion 0–100%**. Pen pressure is supported where pointer hardware provides it. `←/→` switch scenes, `B` switches brush, `+/-` changes radius, `R` reveals, and `Escape` resets. Essential content remains visible; a manual reveal option means the experience never requires precision gestures.
 
-按住鼠标或在手机上触摸、慢慢移动，就能擦出一条短暂清晰的路径。松开手后，水汽在约 6–9 秒内重新凝结。右侧按钮提供无需手势的完整观看。不会保存任何用户输入或痕迹。
+## Scenes
 
-## 技术
+- **等雨停 / After the Rain** — moisture on a greenhouse window.
+- **没寄出的信 / The Unsent Letter** — a private note behind frosted glass.
+- **末班车的窗 / The Last Train** — rainy city light behind a moving window.
 
-- **原生 WebGL2 / GLSL ES 3.0**：实时法线纹理、光照扫过表面、光线折射、可变扩散、磨砂/丝纹质感。
-- **Canvas2D 程序化插画**：三个场景在本地生成，不依赖远程图片素材，也不使用原项目图像。
-- **交互擦雾贴图**：独立的 256×256 遮罩，手势轨迹以有寿命的径向笔刷组成，随时间消散。
-- **无外部 JavaScript 依赖**：即开即用；WebGL2 不可用时退回 Canvas2D 模糊/擦拭版本。
-- **响应式 / 无障碍**：鼠标、触屏、键盘 ←/→ 章节、R 完整观看、Escape 重新起雾、支持减少动态效果、文本替代与状态播报。
+All three illustrations are procedurally rendered with Canvas2D. No personal data or touch traces are saved.
 
-运行：
+## Run / deploy
+
+This is a zero-dependency static site, using WebGL2 + GLSL and a Canvas2D fallback. No npm installation is required.
 
 ```bash
 python3 -m http.server 5173
-# 访问 http://localhost:5173
 ```
 
-也可以直接部署到 GitHub Pages / Vercel / Netlify，静态发布仓库根目录即可。
+Open `http://localhost:5173` or publish the repository root with GitHub Pages, Vercel, or Netlify. The HTML uses relative paths for static hosting. Fallback rendering and pointer interactions also work without WebGL2. The layout supports desktop and mobile, reduced-motion preferences, and screen reader status announcements.
 
-## 设计原则
+## Files
 
-“模糊”不是装饰性滤镜，而是一种与观看有关的关系。每幕的模糊有理由：水汽来自环境、遮蔽来自人、折射来自运动。玻璃被擦开的痕迹是临时的，因为并非一切被看见的东西都需要留下。
+- `index.html` — compact experience layout and controls
+- `style.css` — diffuse blue editorial design, responsive / reduced-motion treatment
+- `src/main.js` — three original procedural scenes, normal maps, GLSL refraction, dual-channel brush mask, gestures, fallback renderer
+- `DESIGN_RATIONALE.md` — ideas behind the three reasons to blur
+- `AGENT_HANDOFF.md` — implementation / QA continuation notes
 
-## 致谢与版权说明
+## Credits
 
-概念与代码独立创作，受 [Johnlzx/glass-garden](https://github.com/Johnlzx/glass-garden) 对真实玻璃微结构、折射和移动光线的探索启发。**未复制上游源代码、图片或音频**。项目中所有场景插画均由本项目 Canvas 程序生成。Google Fonts 可选；字体不可访问时自动回退到系统字体。
-
-## 进一步演进
-
-目前是可运行的体验原型，而非物理正确的光学模拟。未来可以加入基于真实场景照片的图层、WebGPU 多级模糊、更加精准的透射/散射、细微声景，并对实际低端设备进行性能分级测试。
+Independent study inspired by [Johnlzx/glass-garden](https://github.com/Johnlzx/glass-garden)'s experimentation with glass normals, light and refraction. No upstream code or images were copied. The result is a design-oriented real-time renderer, not a physically exact optical simulation. Optional Google Fonts have system fallbacks.
