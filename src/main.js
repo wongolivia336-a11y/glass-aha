@@ -21,7 +21,6 @@ const maskCtx=maskCanvas.getContext('2d',{willReadFrequently:false});
 const sceneCanvases=[];let fallbackCtx=null, webglOkay=false;
 const pointer={x:.30,y:.32,in:false};
 const size={w:1,h:1,dpr:1};
-let lastAnnouncement=0;
 
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const mix=(a,b,t)=>a+(b-a)*t;
@@ -151,8 +150,8 @@ function initWebGL(){try{
   maskCtx.fillStyle='black';maskCtx.fillRect(0,0,256,256);maskTexture=newTexture(maskCanvas);
   const names=['uScene','uNext','uReliefMap','uMask','uResolution','uLight','uTime','uFog','uRelief','uMode','uReveal','uTransition','uNextFog','uNextRelief','uNextMode'];names.forEach(n=>uniforms[n]=gl.getUniformLocation(program,n));
   [['uScene',0],['uNext',1],['uReliefMap',2],['uMask',3]].forEach(([n,i])=>gl.uniform1i(uniforms[n],i));
-  webglOkay=true;resize();return true;
-}catch(e){console.warn('[GLASS AHA] Falling back to Canvas2D:',e);canvas.hidden=true;fallbackCtx=backup.getContext('2d');resize();return false;}}
+  webglOkay=true;canvas.style.opacity='1';resize();return true;
+}catch(e){console.warn('[GLASS AHA] Falling back to Canvas2D:',e);canvas.style.opacity='0';fallbackCtx=backup.getContext('2d');resize();return false;}}
 function resize(){const rect=shell.getBoundingClientRect();size.w=Math.max(1,rect.width);size.h=Math.max(1,rect.height);size.dpr=Math.min(window.devicePixelRatio||1,1.6);const width=Math.round(size.w*size.dpr),height=Math.round(size.h*size.dpr);for(const c of [canvas,backup]){c.width=width;c.height=height;}
   if(gl&&webglOkay)gl.viewport(0,0,width,height);}
 function drawCover(ctx,source){const a=backup.width/backup.height,imA=source.width/source.height;let w,h;if(a>imA){w=backup.width;h=w/imA;}else{h=backup.height;w=h*imA;}ctx.drawImage(source,(backup.width-w)/2,(backup.height-h)/2,w,h);}
