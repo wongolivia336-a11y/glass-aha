@@ -129,10 +129,13 @@ void main(){vec2 uv=vUv;vec2 pixelPhysical=uv*uResolution/min(uResolution.x,uRes
   vec4 bump=texture(uReliefMap,pixelPhysical*1.43);vec4 fine=texture(uReliefMap,pixelPhysical*3.18+vec2(.41,.27));
   vec2 normal=(bump.rg*2.-1.)*.8+(fine.rg*2.-1.)*.2;
   float clear=texture(uMask,uv).r;
-  vec3 c1=glass(uScene,uv,normal,uFog,uRelief,uMode,clear,1.);
-  vec3 c2=glass(uNext,uv,normal,uNextFog,uNextRelief,uNextMode,clear,1.);
-  float mixVal=smoothstep(0.,1.,uTransition);
-  vec3 color=mix(c1,c2,mixVal);
+  // On steady frames sample only one scene. Dual sampling is reserved for transitions.
+  vec3 color;
+  if(uTransition>=.999){color=glass(uNext,uv,normal,uNextFog,uNextRelief,uNextMode,clear,1.);}
+  else if(uTransition<=.001){color=glass(uScene,uv,normal,uFog,uRelief,uMode,clear,1.);}
+  else{vec3 a=glass(uScene,uv,normal,uFog,uRelief,uMode,clear,1.);
+       vec3 b=glass(uNext,uv,normal,uNextFog,uNextRelief,uNextMode,clear,1.);
+       color=mix(a,b,smoothstep(0.,1.,uTransition));}
   color*=1.-.085*dot((uv-.5)*vec2(1.,.85),(uv-.5)*vec2(1.,.85));
   fragColor=vec4(clamp(color,0.,1.),1.);
 }`;
