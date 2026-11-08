@@ -45,3 +45,6 @@ The central `src/main.js` glass engine is deliberately unchanged from V2. The up
 - Performance-profile the per-surface WebGL contexts on midrange Android. Migrate to a single compositor if needed; do not silently reduce interaction fidelity.
 - Check 320/390/768/1440 px and reduced-transparency / reduced-motion states, keyboard focus and native `dialog`.
 - Keep the editorial blue feeling restrained. The optics UI should be secondary to the central interactive glass.
+
+## Edition 04 — UI refinement
+See `DESIGN_AUDIT_V4.md` and `AGENTS.md`. The new presentation-only slider layer is in `precision-ui.css` + `src/precision-ui.js`. Never replace the native range inputs with non-semantic draggable divs. Project level Elaya skill instructions are installed in `.agents/skills/`; override default dark palette/marketing layout with this project's blue material-study direction.

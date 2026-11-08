@@ -1,0 +1,121 @@
+/* GLASS AHA / 04 · interaction instruments
+   The landscape glass stays in src/main.js; these details belong to the controls. */
+:root {
+  --touch-ease: cubic-bezier(.22,1,.36,1);
+  --press-ease: cubic-bezier(.34,1.56,.64,1);
+  --ink: #214974;
+  --edge-ink: rgba(74,125,185,.26);
+}
+/* Calm, optically-aligned typographic hierarchy. The tiny captions were hard to read. */
+.tool-intro small,.range-top small,.chapter-name small{font-size:10px!important;letter-spacing:.025em!important}
+.tool-intro strong,.range-top,.tool-actions button,.mode-button{font-size:12px!important}
+.range-top output{font-size:12px!important;font-variant-numeric:tabular-nums}
+.tool-dock{--glint-x:52%;--glint-y:10%;border-radius:27px;box-shadow:0 17px 52px rgba(50,93,149,.085),inset 0 1px 0 rgba(255,255,255,.7);transition:box-shadow 480ms var(--touch-ease),border-color 480ms var(--touch-ease)}
+.tool-dock:hover,.tool-dock:focus-within{border-color:rgba(107,158,213,.42);box-shadow:0 20px 56px rgba(45,92,147,.115),inset 0 1px 0 rgba(255,255,255,.86)}
+.tool-dock::after{background:radial-gradient(420px 180px at var(--glint-x) var(--glint-y),rgba(255,255,255,.21),transparent 78%);mix-blend-mode:normal}
+.tool-icon{transition:transform 650ms var(--touch-ease),box-shadow 480ms var(--touch-ease)}
+.tool-dock:hover .tool-icon{transform:rotate(7deg) scale(1.035)}
+.tool-icon:after{content:"";position:absolute;inset:5px;border:1px solid rgba(255,255,255,.38);border-radius:50%;pointer-events:none}
+/* The mode selector has ONE shared travelling membrane, not two pills swapping opacity. */
+.tool-mode{position:relative;isolation:isolate;overflow:hidden;padding:5px;gap:2px;border-color:rgba(99,146,204,.30);box-shadow:inset 0 1px 3px #406aa41c,0 1px 0 #ffffffb9}
+.tool-mode::before{content:"";position:absolute;z-index:0;left:5px;top:5px;bottom:5px;width:calc((100% - 12px)/2);border-radius:999px;background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(219,237,255,.88));box-shadow:0 4px 13px rgba(59,105,159,.17),inset 0 1px 1px #fff,inset 0 -1px 1px #6ca2d730;border:1px solid rgba(255,255,255,.82);transform:translate3d(0,0,0);transition:transform 540ms var(--touch-ease),box-shadow 360ms var(--touch-ease);pointer-events:none}
+.tool-mode[data-active="fog"]::before{transform:translate3d(calc(100% + 2px),0,0)}
+.mode-button,.mode-button.is-active{position:relative;z-index:1;transform:none;background:transparent;box-shadow:none;border-color:transparent;transition:color 260ms var(--touch-ease),transform 320ms var(--press-ease)}
+.mode-button:hover{background:transparent!important;transform:translateY(-1px)}
+.mode-button:active{transform:scale(.94)}
+.mode-button.is-active{color:#1e508b}
+.mode-button.is-active .mode-symbol{animation:none}
+.mode-symbol{display:inline-block;transition:transform 520ms var(--touch-ease),filter 300ms var(--touch-ease)}
+.mode-button:hover .mode-symbol{transform:rotate(30deg) scale(1.08)}
+.mode-button.is-active .mode-symbol{filter:drop-shadow(0 1px 2px #8caee03d)}
+.tool-mode[data-active="fog"] .mode-button#fogMode .mode-symbol{transform:rotate(30deg)}
+/* A real native input remains the hit target; its track is replaced by the custom optical instrument. */
+.tool-ranges{gap:clamp(20px,2.2vw,38px)}
+.tool-range{padding:3px 0 1px;--progress:40%;--ratio:.4;--liquid-velocity:0}
+.tool-range .range-top{margin-bottom:7px;align-items:center}
+.tool-range .range-top small{display:inline;margin-left:6px;opacity:.70}
+.tool-range output{padding:3px 7px;border-radius:9px;min-width:45px;text-align:center;transition:transform 320ms var(--touch-ease),color 300ms,background 300ms}
+.tool-range:is(:hover,:focus-within,.is-dragging) output{color:#18588f;background:rgba(247,253,255,.66)}
+.range-mechanism{position:relative;height:32px;isolation:isolate}
+.range-mechanism::before{content:"";position:absolute;inset:2px -6px;border-radius:15px;background:radial-gradient(ellipse at var(--hover-x,50%) 55%,rgba(165,205,250,.26),transparent 58%);opacity:0;pointer-events:none;transition:opacity 350ms}
+.tool-range:is(:hover,:focus-within,.is-dragging) .range-mechanism::before{opacity:1}
+.range-bed{position:absolute;left:0;right:0;top:50%;height:9px;transform:translateY(-50%);border-radius:999px;background:rgba(169,198,231,.25);border:1px solid rgba(110,158,211,.22);box-shadow:inset 0 1px 3px rgba(76,118,167,.17),0 1px 0 rgba(255,255,255,.76);pointer-events:none;overflow:hidden}
+.range-bed::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.58),transparent 75%);pointer-events:none}
+.range-liquid{display:block;position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,#668fd0 0%,#6b9ad5 62%,#9ccafa 100%);transform-origin:left center;transform:scaleX(var(--ratio));box-shadow:inset 0 1px 1px rgba(255,255,255,.5);pointer-events:none}
+.range-liquid::after{content:"";position:absolute;right:0;top:0;width:35px;height:100%;background:linear-gradient(90deg,transparent,rgba(250,255,255,.73));opacity:.64}
+.range-glass-handle{position:absolute;left:var(--progress);top:50%;height:23px;width:23px;border-radius:50%;transform:translate(-50%,-50%) scale(var(--handle-scale,1));background:radial-gradient(circle at 33% 25%,#fff 0 18%,#e1f1ff 38%,#a2c6ee 65%,#6196d4 100%);border:2px solid rgba(248,252,255,.97);box-shadow:0 0 0 1px rgba(77,125,186,.33),0 3px 8px rgba(57,105,169,.19),inset -2px -2px 3px rgba(48,99,167,.14);pointer-events:none;transition:transform 450ms var(--press-ease),box-shadow 350ms var(--touch-ease),border-radius 350ms var(--press-ease)}
+.range-glass-handle::after{content:"";position:absolute;inset:5px;border-radius:50%;background:rgba(70,126,191,.63);box-shadow:inset 0 1px 1px #ffffff55}
+.range-glass-handle::before{content:"";position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(81,137,204,.4);opacity:0;transform:scale(.73);transition:transform 460ms var(--press-ease),opacity 260ms}
+.tool-range:is(:hover,:focus-within) .range-glass-handle{--handle-scale:1.09;box-shadow:0 0 0 1px rgba(69,124,195,.46),0 6px 16px rgba(53,105,177,.21),inset -2px -2px 3px #4385c33b}
+.tool-range:is(:hover,:focus-within) .range-glass-handle::before{transform:scale(1);opacity:.7}
+.tool-range.is-dragging .range-glass-handle{--handle-scale:1.2;border-radius:44% 56% 54% 46%;box-shadow:0 0 0 4px rgba(137,192,242,.17),0 6px 18px rgba(60,110,180,.23)}
+.range-value-float{position:absolute;left:var(--progress);top:-34px;transform:translate(-50%,5px) scale(.9);padding:5px 9px;min-width:43px;text-align:center;border-radius:10px;background:rgba(235,247,255,.92);box-shadow:inset 0 1px 0 #fff,0 5px 13px #487bae24;border:1px solid rgba(117,167,215,.31);font:500 12px/1.3 var(--mono);color:#225b97;font-variant-numeric:tabular-nums;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 250ms var(--touch-ease),transform 380ms var(--press-ease)}
+.range-value-float::after{content:"";position:absolute;bottom:-4px;left:calc(50% - 4px);width:7px;height:7px;background:inherit;transform:rotate(45deg);border-right:1px solid #90b6df55;border-bottom:1px solid #90b6df55}
+.tool-range:is(:hover,:focus-within,.is-dragging) .range-value-float{opacity:1;transform:translate(-50%,-2px) scale(1)}
+.range-mechanism input[type="range"]{position:absolute;z-index:3;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y;appearance:none}
+.range-mechanism input[type="range"]::-webkit-slider-thumb{appearance:none;width:27px;height:32px;background:transparent;border:0;box-shadow:none;cursor:grab}
+.range-mechanism input[type="range"]:active::-webkit-slider-thumb{cursor:grabbing}
+.range-mechanism input[type="range"]::-moz-range-thumb{width:27px;height:32px;background:transparent;border:0;box-shadow:none}
+.range-mechanism input[type="range"]:focus-visible{outline:2px solid rgba(46,113,191,.6);outline-offset:5px;border-radius:16px;opacity:.025}
+.tool-range .range-hint{display:none}
+/* Buttons have a restrained local highlight and precise mechanical press. */
+.header-link,.gesture-help,.tool-actions button,.chapter{--light-px:50%;--light-py:30%;--dx:0px;--dy:0px}
+.header-link::after,.gesture-help::after,.tool-actions button::after,.chapter::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:radial-gradient(130px 75px at var(--light-px) var(--light-py),rgba(255,255,255,.68),transparent 80%);transition:opacity 390ms var(--touch-ease)}
+.header-link:is(:hover,:focus-visible)::after,.gesture-help:is(:hover,:focus-visible)::after,.tool-actions button:is(:hover,:focus-visible)::after,.chapter:is(:hover,:focus-visible)::after{opacity:.85}
+.header-link{min-height:43px;font-size:12px;transition:transform 480ms var(--touch-ease),border-color 400ms,box-shadow 480ms}
+.header-link:hover{transform:translate3d(0,-1px,0)}
+.header-link .about-icon{transition:transform 560ms var(--touch-ease),background 330ms}
+.header-link:hover .about-icon{transform:translate3d(2px,-2px,0) rotate(9deg)}
+.tool-actions button{transition:transform 410ms var(--touch-ease),box-shadow 440ms var(--touch-ease),border-color 390ms var(--touch-ease)}
+.tool-actions button:hover{transform:translate3d(0,-2px,0)}
+.tool-actions button:active{transform:translate3d(0,1px,0) scale(.97)}
+.action-icon:hover svg{transform:rotate(-47deg)}
+.gesture-help{font-size:12px}
+.gesture-help:hover{transform:translateY(-1px)}
+/* Chapter focus is a quiet displacement of light and label, not a 45 degree arrow spin. */
+.chapter{transition:transform 550ms var(--touch-ease),box-shadow 550ms var(--touch-ease),border-color 400ms var(--touch-ease);transform:translate3d(0,0,0)}
+.chapter:hover{transform:translate3d(0,-3px,0);box-shadow:0 14px 29px rgba(63,109,168,.115)}
+.chapter:active{transform:translate3d(0,0,0) scale(.988)}
+.chapter:before,.chapter.active:before,.chapter:hover:before{width:calc(100% - 50px);transform-origin:left center;transform:scaleX(0);transition:transform 550ms var(--touch-ease)}
+.chapter:is(:hover,.active):before{transform:scaleX(1)}
+.chapter-arrow{transform:translate3d(0,1px,0);transition:transform 550ms var(--touch-ease),background 350ms var(--touch-ease),box-shadow 400ms}
+.chapter:hover .chapter-arrow{transform:translate3d(2px,-2px,0) rotate(0deg);background:rgba(232,246,255,.76);box-shadow:0 3px 10px #6e99d926}
+.chapter-name{transition:transform 550ms var(--touch-ease)}
+.chapter:hover .chapter-name{transform:translate3d(2px,0,0)}
+.chapter-index i{transition:transform 400ms var(--press-ease),background 340ms,box-shadow 350ms}
+.chapter:hover .chapter-index i{transform:scale(1.3)}
+.chapter:is(:focus-visible,.active){border-color:rgba(82,140,210,.53)!important}
+/* Contrast and focus stay reliable when GPU effects are unavailable. */
+:where(button,a,input):focus-visible{outline:2px solid #376da9!important;outline-offset:4px}
+.tool-mode:focus-within{box-shadow:0 0 0 3px rgba(83,143,213,.1),inset 0 1px 2px #668ac512}
+.tool-range.is-dragging .range-top output{transform:translateY(-1px);background:rgba(234,248,255,.75)}
+@media(max-width:650px){
+ .tool-range .range-top small{font-size:9px!important}
+ .range-mechanism{height:40px}
+ .range-glass-handle{width:24px;height:24px}
+ .tool-ranges{gap:16px 24px}
+ .tool-dock{border-radius:24px}
+ .chapter:before,.chapter.active:before,.chapter:hover:before{width:calc(100% - 32px)}
+ .range-value-float{top:-31px}
+}
+@media(hover:none),(pointer:coarse){
+ .tool-range .range-value-float{opacity:0}
+ .tool-range.is-dragging .range-value-float,.tool-range:focus-within .range-value-float{opacity:1}
+ .chapter:hover{transform:none}
+ .chapter:hover .chapter-name{transform:none}
+ .range-mechanism input[type="range"]{touch-action:pan-y}
+}
+@media(prefers-reduced-motion:reduce){
+ .tool-mode::before,.range-glass-handle,.range-glass-handle::before,.range-value-float,.chapter-name,.chapter-arrow,.chapter,.tool-actions button,.header-link,.mode-symbol{transition-duration:0ms!important;animation:none!important}
+ .chapter:hover,.tool-actions button:hover,.header-link:hover,.mode-button:hover,.gesture-help:hover{transform:none!important}
+}
+
+/* A value is shown once: the inline value gives way to the traveling readout. */
+.tool-range:is(:hover,:focus-within,.is-dragging) .range-top output{opacity:0}
+.tool-range.is-dragging .range-value-float{z-index:5}
+@media(max-width:650px){
+  .intro-aside{display:none!important}
+  .title-cluster{min-width:0;width:100%}
+  .title-cluster h1{max-width:none;text-wrap:balance}
+  .intro-strip{padding-right:0}
+}

@@ -334,6 +334,7 @@ function syncRange(input,output,format){
 function setRadius(r){brush.radius=clamp(Math.round(r/2)*2,22,180);radiusRange.value=String(brush.radius);
   syncRange(radiusRange,$('#radiusValue'),v=>String(v));
   brushCursor.style.width=`${brush.radius*2}px`;brushCursor.style.height=`${brush.radius*2}px`;
+  radiusRange.dispatchEvent(new Event("glass:sync"));
 }
 function paintSegment(p,shiftKey=false,pressure=1){
   const now=performance.now();

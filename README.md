@@ -28,3 +28,14 @@
 ## Credit
 
 灵感来自 [Johnlzx/glass-garden](https://github.com/Johnlzx/glass-garden) 的玻璃材质研究；不包含其原始图片或代码。外围光学设计依据用户提供的《液态玻璃_技术方案_v3_whereyanlands.pdf》的架构原则独立实现。
+
+## Edition 04 — precision controls
+
+The peripheral controls were refined using the project-installed Elaya design audit skills. The core glass scene has not been redesigned. Changes include native-input backed glass sliders, floating adjustment readouts, a shared moving mode selection membrane, localized pointer-sensitive hover highlights, steadier chapter animations, mobile legibility improvements, and corrected DPR-aligned environmental sampling.
+
+- Full audit and tests: [`DESIGN_AUDIT_V4.md`](./DESIGN_AUDIT_V4.md)
+- Agent instructions: [`AGENTS.md`](./AGENTS.md)
+- New module: `src/precision-ui.js` + `precision-ui.css`
+- Installed third-party skills: `.agents/skills/` (original upstream skill instructions under MIT)
+
+Test the WebGL refraction surface on real GPU hardware; the supplied automated visual checks ran in Chromium's fallback environment.

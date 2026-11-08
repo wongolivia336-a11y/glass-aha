@@ -181,8 +181,9 @@ function createOptics(target,preset='small'){
     rect=target.getBoundingClientRect();
     ctx.setTransform(1,0,0,1,0,0);
     ctx.fillStyle='#eaf2fc';ctx.fillRect(0,0,width,height);
-    const scale=backdrop.width/window.innerWidth;
-    ctx.drawImage(backdrop,-rect.left*scale,-rect.top*scale);
+    // Draw the same viewport-space background into this element's device-pixel canvas.
+    // Different DPR caps are handled here rather than assumed equal.
+    ctx.drawImage(backdrop,-rect.left*dpr,-rect.top*dpr,window.innerWidth*dpr,window.innerHeight*dpr);
     gl.bindTexture(gl.TEXTURE_2D,texture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,sampler);
